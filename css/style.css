@@ -710,3 +710,184 @@ body.light-mode .btn-back-to-top:hover {
     height: 300px;
   }
 }
+/* ==================== LÍNEA DE TIEMPO DE MAPAS ==================== */
+.timeline-section {
+    padding: 2rem 0;
+    min-height: 600px;
+}
+
+.timeline-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* La línea central */
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple), var(--neon-cyan));
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+}
+
+/* Tarjetas de la línea de tiempo */
+.timeline-item {
+    position: relative;
+    width: 100%;
+    margin-bottom: 3rem;
+}
+
+.timeline-card {
+    position: relative;
+    width: 45%;
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.timeline-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+}
+
+/* Alternar izquierda y derecha */
+.timeline-item:nth-child(odd) .timeline-card {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.timeline-item:nth-child(even) .timeline-card {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+/* Círculo conector */
+.timeline-card::before {
+    content: '';
+    position: absolute;
+    top: 30px;
+    width: 16px;
+    height: 16px;
+    background: var(--neon-cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--neon-cyan);
+    z-index: 10;
+}
+
+.timeline-item:nth-child(odd) .timeline-card::before {
+    left: -45px;
+}
+
+.timeline-item:nth-child(even) .timeline-card::before {
+    right: -45px;
+}
+
+/* Imagen del mapa */
+.timeline-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.timeline-card:hover .timeline-img {
+    transform: scale(1.03);
+}
+
+/* Contenido de la tarjeta */
+.timeline-content {
+    padding: 1.2rem;
+}
+
+.timeline-season {
+    display: inline-block;
+    background: var(--neon-cyan);
+    color: var(--bg-primary);
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 0.5rem;
+    font-family: 'Orbitron', monospace;
+}
+
+.timeline-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
+    color: var(--text-primary);
+    font-family: 'Orbitron', monospace;
+}
+
+.timeline-tag {
+    display: inline-block;
+    background: rgba(0, 243, 255, 0.1);
+    border: 1px solid var(--neon-cyan);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    margin-bottom: 0.8rem;
+}
+
+.timeline-desc {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+}
+
+.timeline-year {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.timeline-year i {
+    color: var(--neon-cyan);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .timeline-container::before {
+        left: 20px;
+    }
+    
+    .timeline-card {
+        width: calc(100% - 50px);
+        margin-left: 50px !important;
+    }
+    
+    .timeline-card::before {
+        left: -35px !important;
+        right: auto !important;
+    }
+    
+    .timeline-item:nth-child(even) .timeline-card {
+        margin-left: 50px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .timeline-img {
+        height: 160px;
+    }
+    
+    .timeline-title {
+        font-size: 0.95rem;
+    }
+    
+    .timeline-desc {
+        font-size: 0.75rem;
+    }
+}

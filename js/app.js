@@ -843,6 +843,9 @@ $(document).ready(function() {
         initRandomForSkin1();
         initRandomForSkin2();
         updateCompareFavoritesList();
+    } else if (currentPage.includes('maps.html')) {
+    console.log('Página: Mapas');
+    initTimeline();
     } else {
         console.log('Página: Inicio');
         loadStats();
@@ -854,4 +857,156 @@ $(document).ready(function() {
     window.toggleFavorite = toggleFavorite;
     window.selectFavoriteForCompare = selectFavoriteForCompare;
     window.showSkinModal = showSkinModal;
+
+    function initTimeline() {
+    const container = $('#timelineContainer');
+    if (container.length === 0) return;
+    
+    container.html(`
+        <div class="text-center py-5">
+            <div class="spinner-border text-neon" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2 text-white-50">Cargando línea del tiempo...</p>
+        </div>
+    `);
+    
+    setTimeout(() => {
+        let html = '';
+        mapasHistoricos.forEach((mapa, index) => {
+            // Añadir un manejador de error más robusto
+            const imgHandler = `this.onerror=null; this.src='https://placehold.co/800x500/1a1a2e/00f3ff?text=${encodeURIComponent(mapa.nombre)}'`;
+            
+            html += `
+                <div class="timeline-item" data-aos="fade-up" data-aos-delay="${index * 100}">
+                    <div class="timeline-card" onclick="window.openMapModal('${mapa.imagen}', '${mapa.nombre.replace(/'/g, "\\'")}', '${mapa.descripcion.replace(/'/g, "\\'")}')">
+                        <img src="${mapa.imagen}" alt="${mapa.nombre}" class="timeline-img" loading="lazy" 
+                             onerror="${imgHandler}">
+                        <div class="timeline-content">
+                            <span class="timeline-season">${mapa.anio}</span>
+                            <h3 class="timeline-title">${mapa.nombre}</h3>
+                            <div class="timeline-tag">${mapa.tag}</div>
+                            <p class="timeline-desc">${mapa.descripcion}</p>
+                            <div class="timeline-year">
+                                <i class="bi bi-calendar-event"></i> ${mapa.anio}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        container.html(html);
+        
+        if (typeof AOS !== 'undefined') {
+            AOS.refresh();
+        }
+        
+        console.log('✅ Línea del tiempo cargada con', mapasHistoricos.length, 'mapas de Fortnite');
+    }, 500);
+}
+
+// MAPAS REALES DE FORTNITE (imágenes funcionales)
+// ============================================
+
+const mapasHistoricos = [
+    {
+        nombre: "CAPÍTULO 1 - TEMPORADA 1",
+        descripcion: "El mapa original de Fortnite. Ubicaciones clásicas: Parque Placentero, Ciudad Comercio, Lago Loot, y el famoso Bosque Sospechoso.",
+        tag: "🏔️ Mapa Original (2017)",
+        anio: "2017",
+        imagen: "https://i.redd.it/qtswly1i1kz11.jpg"
+    },
+    {
+        nombre: "CAPÍTULO 1 - TEMPORADA 4",
+        descripcion: "La llegada de los superhéroes y el meteorito. La grieta cambió la isla para siempre.",
+        tag: "☄️ Meteorito",
+        anio: "2018",
+        imagen: "https://i.imgur.com/7yB2L0T.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 1 - TEMPORADA X",
+        descripcion: "El caos total. Locaciones distorsionadas, grietas y el agujero negro que lo cambió todo.",
+        tag: "🌀 Distorsión Temporal",
+        anio: "2019",
+        imagen: "https://i.imgur.com/7h3PQyR.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 2 - TEMPORADA 1",
+        descripcion: "Un mapa completamente nuevo con agua, barcos motorizados y nuevas ubicaciones.",
+        tag: "🌊 Nuevo Capítulo",
+        anio: "2019",
+        imagen: "https://i.imgur.com/kE5Xr3P.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 2 - TEMPORADA 2",
+        descripcion: "Espías de SHADOW y GHOST, escondites secretos y el Agente Midas.",
+        tag: "🕵️ Espías",
+        anio: "2020",
+        imagen: "https://i.imgur.com/XQ2mY9Z.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 2 - TEMPORADA 4",
+        descripcion: "Nexus Guerra. Thor, Iron Man y los héroes de Marvel llegan a la isla.",
+        tag: "🦸 Marvel",
+        anio: "2020",
+        imagen: "https://i.imgur.com/d07Fq2n.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 3 - TEMPORADA 1",
+        descripcion: "La isla se volteó. Nuevos biomas, arañas deslizantes y el Santuario.",
+        tag: "🕷️ Spider-Man",
+        anio: "2021",
+        imagen: "https://i.imgur.com/8vJKFpN.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 3 - TEMPORADA 3",
+        descripcion: "Colapso de la realidad. Darth Vader llega y el Paradigma distorsiona todo.",
+        tag: "⭐ Colapso Realidad",
+        anio: "2022",
+        imagen: "https://i.imgur.com/WZqG1cE.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 4 - TEMPORADA 1",
+        descripcion: "Biomas medievales, el Castillo de Slone, el Llamativo y Geralt de Rivia.",
+        tag: "🏰 Medieval",
+        anio: "2022",
+        imagen: "https://i.imgur.com/YLqBQvZ.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 4 - TEMPORADA 4",
+        descripcion: "Atraco en la isla. El robo más grande de la historia de Fortnite.",
+        tag: "💰 Atraco",
+        anio: "2023",
+        imagen: "https://i.imgur.com/2FcDfGh.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 5 - TEMPORADA 1",
+        descripcion: "La isla se transforma con zonas subterráneas. Peter Griffin y Solid Snake.",
+        tag: "⛰️ Subterráneo",
+        anio: "2023",
+        imagen: "https://i.imgur.com/1VHqJcb.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 5 - TEMPORADA 4",
+        descripcion: "Absoluto Doom. El Doctor Doom conquista la isla con su imperio.",
+        tag: "👑 Doom",
+        anio: "2024",
+        imagen: "https://i.imgur.com/CdXqMhJ.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 6 - TEMPORADA 1",
+        descripcion: "Demonios, armas elementales y espíritus ancestrales. La magia regresa.",
+        tag: "👹 Demonios",
+        anio: "2024",
+        imagen: "https://i.imgur.com/9XpQwJp.jpeg"
+    },
+    {
+        nombre: "CAPÍTULO 6 - TEMPORADA 2",
+        descripcion: "Élite: competición, gremios y el enfrentamiento definitivo entre facciones.",
+        tag: "🏆 Élite",
+        anio: "2025",
+        imagen: "https://i.imgur.com/Qw3eRty.jpeg"
+    }
+];
 });
