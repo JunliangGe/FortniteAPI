@@ -40,7 +40,6 @@ function initAudio() {
     }
 }
 
-// Reproduce diferentes tipos de sonidos
 function playSound(type, volume = 0.1) {
     try {
         initAudio();
@@ -193,7 +192,6 @@ function isFavorite(skinId) {
     return favorites.some(f => f.id === skinId);
 }
 
-// Actualizar la sección de favoritos (lista completa)
 function updateFavoritesDisplay() {
     if ($('#favoritesContainer').length === 0) return;
     
@@ -210,7 +208,6 @@ function updateFavoritesDisplay() {
     $('#favoritesContainer').html(html);
 }
 
-// Vista previa de favoritos (en la página principal)
 function updateFavoritesPreview() {
     if ($('#favoritesPreview').length === 0) return;
     if (favorites.length === 0) {
@@ -225,7 +222,6 @@ function updateFavoritesPreview() {
     $('#favoritesPreview').html(html);
 }
 
-// Lista de favoritos dentro del comparador
 function updateCompareFavoritesList() {
     if ($('#compareFavoritesList').length === 0) return;
     if (favorites.length === 0) {
@@ -361,7 +357,6 @@ function updateComparisonDetails() {
     }
 }
 
-// Botones de skin aleatoria para cada lado del comparador
 function initRandomForSkin1() {
     $('#randomSkin1Btn').click(function() {
         playSound('click');
@@ -526,7 +521,6 @@ function animateNumber(element, target) {
     }, 15);
 }
 
-// Estos son los mensajes de carga (para que la espera no sea tan aburrida)
 const loadingMessages = ["Saltando del autobús...", "Recargando armas...", "Construyendo rampas...", "Abriendo un cofre...", "Tomando escudo de Slurp...", "Buscando loot...", "Preparando victoria...", "Conectando con la isla...", "Invocando grieta..."];
 function getRandomLoadingMessage() { return loadingMessages[Math.floor(Math.random() * loadingMessages.length)]; }
 
@@ -585,7 +579,6 @@ function initCountdown() {
     setInterval(updateCountdown, 1000);
 }
 
-// Las skins en tendencia (desde la tienda)
 function loadTrending() {
     $.ajax({
         url: SHOP_URL,
@@ -759,7 +752,7 @@ function escapeHtml(text) {
 function setCurrentYear() { $('#currentYear').text(new Date().getFullYear()); }
 
 // --------------------------------------------------------------
-// TRUCOS Y CONSEJOS (de Fortnite)
+// TRUCOS Y CONSEJOS
 // --------------------------------------------------------------
 const fortniteTips = [
     "Apunta a la cabeza: el daño crítico es mucho mayor.",
@@ -788,7 +781,6 @@ function initScrollProgress() {
     });
 }
 
-// Efecto máquina de escribir para el título principal
 function typeWriter(element, text, speed = 100) {
     let i = 0;
     element.textContent = '';
@@ -802,11 +794,69 @@ function typeWriter(element, text, speed = 100) {
     type();
 }
 
-// Sonidos al pasar el ratón por encima de los botones
 $('body').on('mouseenter', '.btn, .cosmetic-card, .news-card, .stat-card, .slider-card, .favorite-btn, .filter-btn, .btn-filter-toggle, .favorite-item', function() { playHover(); });
 
 // --------------------------------------------------------------
-// INICIO DE LA PÁGINA: detecta qué página es y la inicia
+// LÍNEA DEL TIEMPO DE MAPAS
+// --------------------------------------------------------------
+const timelineData = [
+    { titulo: "CAPÍTULO 1", años: "2017-2019", tag: "🏔️ EL ORIGEN", desc: "El mapa original donde todo comenzó.", lugares: ["Parque Placentero", "Ciudad Comercio", "Balsa Botín"], img: "https://static.wikia.nocookie.net/fortnite/images/d/d7/Mapa_de_la_Temporada_1.png/revision/latest?cb=20240107204050&path-prefix=es" },
+    { titulo: "CAPÍTULO 2", años: "2019-2021", tag: "🌊 RENOVACIÓN", desc: "Nuevo mapa con islas, barcos y zonas acuáticas.", lugares: ["La Agencia", "Colapso Coral", "Yate de Midas"], img: "https://static.wikia.nocookie.net/fortnite/images/0/08/Apollo_%28Update_v12.60%29_-_Island_-_Fortnite.png/revision/latest?cb=20231009212156" },
+    { titulo: "CAPÍTULO 3", años: "2021-2022", tag: "🦸 HÉROES", desc: "La isla se volteó. Spider-Man y Darth Vader.", lugares: ["Santuario", "Daily Bugle", "Arañas Deslizantes"], img: "https://static.wikia.nocookie.net/fortnite/images/4/4b/Artemis_%28Update_v21.00%29_-_Island_-_Fortnite.png/revision/latest?cb=20231010092654" },
+    { titulo: "CAPÍTULO 4", años: "2022-2023", tag: "🏰 MEDIEVAL", desc: "Castillos y Geralt de Rivia.", lugares: ["Castillo Slone", "El Llamativo", "Zona Medieval"], img: "https://www.gamerevolution.com/wp-content/uploads/sites/2/2023/03/Fortnite-Chapter-4-Season-2-Map-Changes-2.jpg?w=1024" },
+    { titulo: "CAPÍTULO 5", años: "2023-2024", tag: "⛰️ SUBTERRÁNEO", desc: "Peter Griffin y el Doctor Doom.", lugares: ["Doomstadt", "Castillo Doom", "Pandora"], img: "https://static.wikia.nocookie.net/fortnite/images/2/21/Helios_%28Update_v28.00%29_-_Island_-_Fortnite.png/revision/latest?cb=20231206212959" },
+    { titulo: "CAPÍTULO 6", años: "2024-2025", tag: "👹 DEMONIOS", desc: "Armas elementales y espíritus ancestrales.", lugares: ["Aldea Espiritual", "Dominio Élite", "Templo Elemental"], img: "https://static.wikia.nocookie.net/fortnite/images/d/d3/Oninoshima_%28Update_v33.00%29_-_Island_-_Fortnite.png/revision/latest?cb=20241201072954" }
+    
+    
+];
+
+function initTimeline() {
+    const container = document.getElementById('timelineContainer');
+    if (!container) return;
+    
+    let html = '';
+    timelineData.forEach(mapa => {
+        let badges = '';
+        mapa.lugares.forEach(lugar => { badges += `<span class="timeline-badge">${lugar}</span>`; });
+        
+        html += `
+            <div class="timeline-item">
+                <div class="timeline-card" onclick="abrirModalMapa('${mapa.titulo}', '${mapa.desc.replace(/'/g, "\\'")}', '${mapa.img}')">
+                    <img src="${mapa.img}" class="timeline-img" alt="${mapa.titulo}" onerror="this.src='https://placehold.co/600x400/1a1a2e/00f3ff?text=Mapa'">
+                    <div class="timeline-content">
+                        <span class="timeline-year">${mapa.años}</span>
+                        <h3 class="timeline-title">${mapa.titulo}</h3>
+                        <div class="timeline-tag">${mapa.tag}</div>
+                        <p class="timeline-desc">${mapa.desc}</p>
+                        <div class="timeline-badges">${badges}</div>
+                        <button class="btn-timeline" onclick="event.stopPropagation(); abrirModalMapa('${mapa.titulo}', '${mapa.desc.replace(/'/g, "\\'")}', '${mapa.img}')"><i class="bi bi-eye"></i> Ver mapa completo</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.timeline-item').forEach(item => observer.observe(item));
+}
+
+function abrirModalMapa(titulo, descripcion, imagen) {
+    try {
+        if (typeof playSound === 'function') playSound('select');
+        document.getElementById('mapModalTitle').innerText = titulo;
+        document.getElementById('mapModalImg').src = imagen;
+        document.getElementById('mapModalDesc').innerText = descripcion;
+        new bootstrap.Modal(document.getElementById('mapModal')).show();
+    } catch(e) { alert(titulo + '\n\n' + descripcion); }
+}
+
+window.abrirModalMapa = abrirModalMapa;
+
+// --------------------------------------------------------------
+// INICIO DE LA PÁGINA
 // --------------------------------------------------------------
 $(document).ready(function() {
     console.log('Fortnite Hub iniciado');
@@ -824,7 +874,6 @@ $(document).ready(function() {
     
     $('#backToTop').click(() => $('html, body').animate({ scrollTop: 0 }, 500));
     
-    // Enlaces internos (smooth scroll)
     $('a[href^="#"]').on('click', function(e) {
         const target = $(this.getAttribute('href'));
         if (target.length) {
@@ -844,8 +893,8 @@ $(document).ready(function() {
         initRandomForSkin2();
         updateCompareFavoritesList();
     } else if (currentPage.includes('maps.html')) {
-    console.log('Página: Mapas');
-    initTimeline();
+        console.log('Página: Línea del tiempo de mapas');
+        initTimeline();
     } else {
         console.log('Página: Inicio');
         loadStats();
@@ -857,156 +906,4 @@ $(document).ready(function() {
     window.toggleFavorite = toggleFavorite;
     window.selectFavoriteForCompare = selectFavoriteForCompare;
     window.showSkinModal = showSkinModal;
-
-    function initTimeline() {
-    const container = $('#timelineContainer');
-    if (container.length === 0) return;
-    
-    container.html(`
-        <div class="text-center py-5">
-            <div class="spinner-border text-neon" role="status">
-                <span class="visually-hidden">Cargando...</span>
-            </div>
-            <p class="mt-2 text-white-50">Cargando línea del tiempo...</p>
-        </div>
-    `);
-    
-    setTimeout(() => {
-        let html = '';
-        mapasHistoricos.forEach((mapa, index) => {
-            // Añadir un manejador de error más robusto
-            const imgHandler = `this.onerror=null; this.src='https://placehold.co/800x500/1a1a2e/00f3ff?text=${encodeURIComponent(mapa.nombre)}'`;
-            
-            html += `
-                <div class="timeline-item" data-aos="fade-up" data-aos-delay="${index * 100}">
-                    <div class="timeline-card" onclick="window.openMapModal('${mapa.imagen}', '${mapa.nombre.replace(/'/g, "\\'")}', '${mapa.descripcion.replace(/'/g, "\\'")}')">
-                        <img src="${mapa.imagen}" alt="${mapa.nombre}" class="timeline-img" loading="lazy" 
-                             onerror="${imgHandler}">
-                        <div class="timeline-content">
-                            <span class="timeline-season">${mapa.anio}</span>
-                            <h3 class="timeline-title">${mapa.nombre}</h3>
-                            <div class="timeline-tag">${mapa.tag}</div>
-                            <p class="timeline-desc">${mapa.descripcion}</p>
-                            <div class="timeline-year">
-                                <i class="bi bi-calendar-event"></i> ${mapa.anio}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        
-        container.html(html);
-        
-        if (typeof AOS !== 'undefined') {
-            AOS.refresh();
-        }
-        
-        console.log('✅ Línea del tiempo cargada con', mapasHistoricos.length, 'mapas de Fortnite');
-    }, 500);
-}
-
-// MAPAS REALES DE FORTNITE (imágenes funcionales)
-// ============================================
-
-const mapasHistoricos = [
-    {
-        nombre: "CAPÍTULO 1 - TEMPORADA 1",
-        descripcion: "El mapa original de Fortnite. Ubicaciones clásicas: Parque Placentero, Ciudad Comercio, Lago Loot, y el famoso Bosque Sospechoso.",
-        tag: "🏔️ Mapa Original (2017)",
-        anio: "2017",
-        imagen: "https://i.redd.it/qtswly1i1kz11.jpg"
-    },
-    {
-        nombre: "CAPÍTULO 1 - TEMPORADA 4",
-        descripcion: "La llegada de los superhéroes y el meteorito. La grieta cambió la isla para siempre.",
-        tag: "☄️ Meteorito",
-        anio: "2018",
-        imagen: "https://i.imgur.com/7yB2L0T.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 1 - TEMPORADA X",
-        descripcion: "El caos total. Locaciones distorsionadas, grietas y el agujero negro que lo cambió todo.",
-        tag: "🌀 Distorsión Temporal",
-        anio: "2019",
-        imagen: "https://i.imgur.com/7h3PQyR.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 2 - TEMPORADA 1",
-        descripcion: "Un mapa completamente nuevo con agua, barcos motorizados y nuevas ubicaciones.",
-        tag: "🌊 Nuevo Capítulo",
-        anio: "2019",
-        imagen: "https://i.imgur.com/kE5Xr3P.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 2 - TEMPORADA 2",
-        descripcion: "Espías de SHADOW y GHOST, escondites secretos y el Agente Midas.",
-        tag: "🕵️ Espías",
-        anio: "2020",
-        imagen: "https://i.imgur.com/XQ2mY9Z.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 2 - TEMPORADA 4",
-        descripcion: "Nexus Guerra. Thor, Iron Man y los héroes de Marvel llegan a la isla.",
-        tag: "🦸 Marvel",
-        anio: "2020",
-        imagen: "https://i.imgur.com/d07Fq2n.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 3 - TEMPORADA 1",
-        descripcion: "La isla se volteó. Nuevos biomas, arañas deslizantes y el Santuario.",
-        tag: "🕷️ Spider-Man",
-        anio: "2021",
-        imagen: "https://i.imgur.com/8vJKFpN.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 3 - TEMPORADA 3",
-        descripcion: "Colapso de la realidad. Darth Vader llega y el Paradigma distorsiona todo.",
-        tag: "⭐ Colapso Realidad",
-        anio: "2022",
-        imagen: "https://i.imgur.com/WZqG1cE.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 4 - TEMPORADA 1",
-        descripcion: "Biomas medievales, el Castillo de Slone, el Llamativo y Geralt de Rivia.",
-        tag: "🏰 Medieval",
-        anio: "2022",
-        imagen: "https://i.imgur.com/YLqBQvZ.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 4 - TEMPORADA 4",
-        descripcion: "Atraco en la isla. El robo más grande de la historia de Fortnite.",
-        tag: "💰 Atraco",
-        anio: "2023",
-        imagen: "https://i.imgur.com/2FcDfGh.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 5 - TEMPORADA 1",
-        descripcion: "La isla se transforma con zonas subterráneas. Peter Griffin y Solid Snake.",
-        tag: "⛰️ Subterráneo",
-        anio: "2023",
-        imagen: "https://i.imgur.com/1VHqJcb.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 5 - TEMPORADA 4",
-        descripcion: "Absoluto Doom. El Doctor Doom conquista la isla con su imperio.",
-        tag: "👑 Doom",
-        anio: "2024",
-        imagen: "https://i.imgur.com/CdXqMhJ.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 6 - TEMPORADA 1",
-        descripcion: "Demonios, armas elementales y espíritus ancestrales. La magia regresa.",
-        tag: "👹 Demonios",
-        anio: "2024",
-        imagen: "https://i.imgur.com/9XpQwJp.jpeg"
-    },
-    {
-        nombre: "CAPÍTULO 6 - TEMPORADA 2",
-        descripcion: "Élite: competición, gremios y el enfrentamiento definitivo entre facciones.",
-        tag: "🏆 Élite",
-        anio: "2025",
-        imagen: "https://i.imgur.com/Qw3eRty.jpeg"
-    }
-];
 });
